@@ -1,0 +1,19 @@
+{
+  "instruments": [
+    {
+      "id": "1",
+      "name": "Share",
+      "currency": "USD"
+    },
+    {
+      "id": "2",
+      "name": "Bond",
+      "currency": "GBP"
+    },
+    {
+      "id": "3",
+      "name": "Option",
+      "currency": "GBP"
+    }
+  ]
+}
