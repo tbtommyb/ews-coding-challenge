@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, ChangeEvent } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
 import Instrument from "../types/Instrument";
@@ -10,20 +10,19 @@ const TradeForm: FC = () => {
 
   const [selectedInstrument, setInstrument] = useState<Instrument>(instruments[0]);
 
-  const handleInstrumentSelect = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setInstrument(instruments.find((i: Instrument) => i.id === event.target.value)!);
   }
   return (
     <>
-      <form>
+      <form role="form">
         <label htmlFor="instrument"> Instrument</label>
-        <select name="instrument" value={selectedInstrument?.id} onChange={handleInstrumentSelect}>{
+        <select name="instrument" value={selectedInstrument?.id} onChange={handleChange}>{
           instruments.map((instrument) => {
             return <option value={instrument.id} key={instrument.id}>{instrument.name}</option>
           })
         }</select>
       </form>
-      <p>{selectedInstrument?.name}</p>
     </>
   );
 }

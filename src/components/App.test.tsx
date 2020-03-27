@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { renderWithRedux } from '../utils/testHelpers';
+
 import App from './App';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders heading', () => {
+  const { getByText } = renderWithRedux(<App />);
+  const header = getByText(/JP Morgan Chase :: EWS :: Coding challenge/);
+  expect(header).toBeInTheDocument();
 });
