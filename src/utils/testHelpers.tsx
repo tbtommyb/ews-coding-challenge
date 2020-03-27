@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import reducer, { RootState } from '../store/reducers';
 
 const initial: RootState = {
-  instruments: []
+  trades: []
 };
 
 export function renderWithRedux(

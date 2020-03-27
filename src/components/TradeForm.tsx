@@ -1,17 +1,17 @@
 import React, { FC, useState, ChangeEvent } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/reducers";
 import Instrument from "../types/Instrument";
 
 // TO NOTE: we can assume the onChange handler can always find the ID
 // because the options values are determined by what's in the state
-const TradeForm: FC = () => {
-  const instruments = useSelector((state: RootState) => state.instruments);
+interface TradeFormProps {
+  instruments: Instrument[]
+}
 
-  const [selectedInstrument, setInstrument] = useState<Instrument>(instruments[0]);
+const TradeForm: FC<TradeFormProps> = ({ instruments }) => {
+  const [selectedInstrument, setSelectedInstrument] = useState<Instrument>();
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setInstrument(instruments.find((i: Instrument) => i.id === event.target.value)!);
+    setSelectedInstrument(instruments.find((i: Instrument) => i.id === event.target.value)!);
   }
   return (
     <>

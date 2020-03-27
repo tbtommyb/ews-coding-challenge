@@ -1,3 +1,3 @@
-import Instrument from "../types/Instrument";
+import Trade from "../types/Trade";
 
-export type InstrumentState = Instrument[];
+export type TradeState = Trade[];

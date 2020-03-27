@@ -1,13 +1,13 @@
 import { combineReducers } from "redux";
-import { InstrumentState } from "./types";
+import { TradeState } from "./types";
 
-const initialInstruments: InstrumentState = [];
+const initialTrades: TradeState = [];
 
-function instruments(state = initialInstruments, _action: any): InstrumentState {
+function trades(state = initialTrades, _action: any): TradeState {
   return state;
 }
 
-const rootReducer = combineReducers({ instruments });
+const rootReducer = combineReducers({ trades });
 
 export default rootReducer;
 
