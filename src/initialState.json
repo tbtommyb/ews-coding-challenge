@@ -3,17 +3,26 @@
     {
       "id": "1",
       "name": "Share",
-      "currency": "USD"
+      "currency": {
+        "code": "USD",
+        "sign": "$"
+      }
     },
     {
       "id": "2",
       "name": "Bond",
-      "currency": "GBP"
+      "currency": {
+        "code": "GBP",
+        "sign": "£"
+      }
     },
     {
       "id": "3",
       "name": "Option",
-      "currency": "GBP"
+      "currency": {
+        "code": "GBP",
+        "sign": "£"
+      }
     }
   ]
 }
