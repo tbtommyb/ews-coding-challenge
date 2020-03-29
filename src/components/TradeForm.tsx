@@ -1,4 +1,5 @@
-import React, { FC, useState, ChangeEvent } from "react";
+import React, { FC, useState, ChangeEvent, FormEvent } from "react";
+import { useDispatch } from "react-redux";
 
 import Select from "./Select";
 import LevelComponent from "./Level";
@@ -6,6 +7,7 @@ import LevelComponent from "./Level";
 import Instrument from "../types/Instrument";
 import SalesPerson from "../types/SalesPerson";
 import Level, { LevelType } from "../types/Level";
+import { createTrade } from "../store/actions";
 
 interface TradeFormProps {
   instruments: Instrument[];
@@ -16,20 +18,29 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(
     instruments[0]
   );
-
   const [selectedSalesPerson, setSelectedSalesPerson] = useState<SalesPerson>(
     salesPersons[0]
   );
-
   const [level, setLevel] = useState<Level>({
     value: 0,
     type: LevelType.Price
   });
-
   const [amount, setAmount] = useState<number>(0);
 
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(createTrade({
+      instrument: selectedInstrument,
+      salesPerson: selectedSalesPerson,
+      level,
+      amount
+    }));
+  };
+
   return (
-    <form role="form">
+    <form role="form" onSubmit={handleSubmit}>
       <label htmlFor="instrument"> Instrument</label>
       <Select
         name="instrument"
@@ -55,6 +66,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
           setAmount(+e.target.value)
         }
       ></input>
+      <input type="submit" value="Submit" />
     </form>
   );
 };

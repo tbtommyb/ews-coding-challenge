@@ -1,13 +1,22 @@
 import { combineReducers } from "redux";
-import { TradeState } from "./types";
+import { AppState, ActionTypes, CREATE_TRADE } from "./types";
 
-const initialTrades: TradeState = [];
-
-function trades(state = initialTrades, _action: any): TradeState {
-  return state;
+const initialState: AppState = {
+  trades: []
 }
 
-const rootReducer = combineReducers({ trades });
+function trades(state = initialState, action: ActionTypes): AppState {
+  switch(action.type) {
+    case CREATE_TRADE:
+      return {
+        trades: [...state.trades, action.payload]
+      }
+    default:
+      return state;
+  }
+}
+
+const rootReducer = combineReducers({ tradeState: trades });
 
 export default rootReducer;
 

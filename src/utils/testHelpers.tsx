@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux'
-import { render } from '@testing-library/react';
-import reducer, { RootState } from '../store/reducers';
+import React, { Component } from "react";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { render } from "@testing-library/react";
+import reducer, { RootState } from "../store/reducers";
 
 const initial: RootState = {
-  trades: []
+  tradeState: {
+    trades: []
+  }
 };
 
 export function renderWithRedux(
@@ -15,6 +17,6 @@ export function renderWithRedux(
   const store = createStore(reducer, initialState);
   return {
     ...render(<Provider store={store}> {ui} </Provider>),
-    store,
-  }
+    store
+  };
 }
