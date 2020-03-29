@@ -6,12 +6,14 @@ interface LevelComponentProps {
   level: Level;
   currency: string;
   onLevelChange: (level: Level) => any;
+  isLoading: boolean;
 }
 
 // TODO: should level be optional?
 const LevelComponent: FC<LevelComponentProps> = ({
   onLevelChange,
   level,
+  isLoading,
   currency = "$"
 }) => {
   const handleTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +33,7 @@ const LevelComponent: FC<LevelComponentProps> = ({
         min="0"
         onChange={handleLevelChange}
         value={level.value}
+        disabled={isLoading}
       ></input>
       <div>
         {Object.keys(LevelType).map((lt: string) => {
@@ -43,6 +46,7 @@ const LevelComponent: FC<LevelComponentProps> = ({
                 onChange={handleTypeChange}
                 value={lt}
                 checked={level.type === lt}
+                disabled={isLoading}
               ></input>
               <label htmlFor={lt}>{lt}</label>
             </React.Fragment>

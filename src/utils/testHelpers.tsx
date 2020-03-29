@@ -7,6 +7,9 @@ import reducer, { RootState } from "../store/reducers";
 const initial: RootState = {
   tradeState: {
     trades: []
+  },
+  systemState: {
+    isLoading: false
   }
 };
 

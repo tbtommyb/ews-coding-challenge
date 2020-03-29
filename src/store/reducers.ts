@@ -1,22 +1,61 @@
 import { combineReducers } from "redux";
-import { TradeState, ActionTypes, CREATE_TRADE } from "./types";
+import {
+  TradeState,
+  SystemState,
+  ActionTypes,
+  CREATE_TRADE_REQUEST,
+  CREATE_TRADE_SUCCESS,
+  SET_IS_LOADING
+} from "./types";
 
-const initialState: TradeState = {
-  trades: []
+const initialTradeState: TradeState = {
+  trades: [],
+  pending: undefined
 };
 
-function trades(state = initialState, action: ActionTypes): TradeState {
+const initialSystemState: SystemState = {
+  isLoading: false
+};
+
+function trades(state = initialTradeState, action: ActionTypes): TradeState {
   switch (action.type) {
-    case CREATE_TRADE:
+    case CREATE_TRADE_SUCCESS:
       return {
-        trades: [...state.trades, action.payload]
+        ...state,
+        trades: [...state.trades, action.payload],
+        pending: undefined
+      };
+    case CREATE_TRADE_REQUEST:
+      return {
+        ...state,
+        pending: action.payload
       };
     default:
       return state;
   }
 }
 
-const rootReducer = combineReducers({ tradeState: trades });
+function system(state = initialSystemState, action: ActionTypes): SystemState {
+  switch (action.type) {
+    case SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload
+      };
+    case CREATE_TRADE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      };
+    default:
+      return state;
+  }
+}
+
+const rootReducer = combineReducers({
+  tradeState: trades,
+  systemState: system
+});
 
 export default rootReducer;
 

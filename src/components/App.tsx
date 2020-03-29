@@ -12,13 +12,14 @@ import salesPersons from "../data/salesPersons.json";
 
 const App: FC = () => {
   const tradeState = useSelector((state: RootState) => state.tradeState);
+  const isLoading = useSelector((state: RootState) => state.systemState.isLoading);
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>JP Morgan Chase :: EWS :: Coding challenge</h1>
       </header>
-      <TradeForm instruments={instruments} salesPersons={salesPersons} />
+      <TradeForm instruments={instruments} salesPersons={salesPersons} isLoading={isLoading}/>
       <TradeList trades={tradeState.trades}/>
     </div>
   );

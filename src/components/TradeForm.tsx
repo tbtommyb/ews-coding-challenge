@@ -8,14 +8,15 @@ import LevelComponent from "./Level";
 import Instrument from "../types/Instrument";
 import SalesPerson from "../types/SalesPerson";
 import Level, { LevelType } from "../types/Level";
-import { createTrade } from "../store/actions";
+import { createTradeRequest } from "../store/actions";
 
 interface TradeFormProps {
   instruments: Instrument[];
   salesPersons: SalesPerson[];
+  isLoading: boolean;
 }
 
-const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
+const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading }) => {
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(
     instruments[0]
   );
@@ -32,7 +33,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(createTrade({
+    dispatch(createTradeRequest({
       instrument: selectedInstrument,
       salesPerson: selectedSalesPerson,
       level,
@@ -50,6 +51,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
           options={instruments}
           selected={selectedInstrument}
           onChange={instr => setSelectedInstrument(instr as Instrument)}
+          isLoading={isLoading}
         />
         <label htmlFor="salesPerson"> Sales Person</label>
         <Select
@@ -57,8 +59,14 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
           options={salesPersons}
           selected={selectedSalesPerson}
           onChange={sp => setSelectedSalesPerson(sp as SalesPerson)}
+          isLoading={isLoading}
         />
-        <LevelComponent onLevelChange={setLevel} level={level} currency={selectedInstrument?.currency.sign} />
+      <LevelComponent
+        onLevelChange={setLevel}
+        level={level}
+        currency={selectedInstrument?.currency.sign}
+        isLoading={isLoading}
+      />
         <label htmlFor="amount">Amount:</label>
         <input
           id="amount"
@@ -68,8 +76,9 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setAmount(+e.target.value)
           }
+          disabled={isLoading}
         ></input>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" disabled={isLoading} />
       </form>
     </div>
   );
