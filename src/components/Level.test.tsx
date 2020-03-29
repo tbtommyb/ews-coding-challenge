@@ -20,7 +20,7 @@ test("changes to the level value are dispatched", () => {
     <LevelComponent level={level} onLevelChange={mockChange} />
   );
 
-  fireEvent.change(getByLabelText("Level"), { target: { value: 1000 } });
+  fireEvent.change(getByLabelText("$"), { target: { value: 1000 } });
 
   expect(mockChange).toHaveBeenCalledWith({ value: 1000, type: "Price" });
 });
