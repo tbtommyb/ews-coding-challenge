@@ -27,6 +27,6 @@ const Select: FC<SelectProps> = ({ name, options, selected, onChange }) => {
       })
     }</select>
   );
-}
+};
 
 export default Select;
