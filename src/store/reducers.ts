@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import { AppState, ActionTypes, CREATE_TRADE } from "./types";
+import { TradeState, ActionTypes, CREATE_TRADE } from "./types";
 
-const initialState: AppState = {
+const initialState: TradeState = {
   trades: []
 };
 
-function trades(state = initialState, action: ActionTypes): AppState {
+function trades(state = initialState, action: ActionTypes): TradeState {
   switch (action.type) {
     case CREATE_TRADE:
       return {

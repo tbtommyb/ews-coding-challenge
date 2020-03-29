@@ -7,4 +7,5 @@ export default interface Trade {
   salesPerson: SalesPerson;
   level: Level;
   amount: number;
+  id: string;
 }

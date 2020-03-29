@@ -1,6 +1,6 @@
 import Trade from "../types/Trade";
 
-export interface AppState {
+export interface TradeState {
   trades: Trade[];
 }
 

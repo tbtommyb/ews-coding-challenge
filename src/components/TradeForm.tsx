@@ -35,7 +35,8 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
       instrument: selectedInstrument,
       salesPerson: selectedSalesPerson,
       level,
-      amount
+      amount,
+      id: Date.now().toString()
     }));
   };
 
