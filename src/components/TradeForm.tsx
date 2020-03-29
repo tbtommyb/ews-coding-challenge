@@ -1,6 +1,7 @@
 import React, { FC, useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch } from "react-redux";
 
+import "./TradeForm.css";
 import Select from "./Select";
 import LevelComponent from "./Level";
 
@@ -41,34 +42,36 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
   };
 
   return (
-    <form role="form" onSubmit={handleSubmit}>
-      <label htmlFor="instrument"> Instrument</label>
-      <Select
-        name="instrument"
-        options={instruments}
-        selected={selectedInstrument}
-        onChange={instr => setSelectedInstrument(instr as Instrument)}
-      />
-      <label htmlFor="salesPerson"> Sales Person</label>
-      <Select
-        name="salesPerson"
-        options={salesPersons}
-        selected={selectedSalesPerson}
-        onChange={sp => setSelectedSalesPerson(sp as SalesPerson)}
-      />
-      <LevelComponent onLevelChange={setLevel} level={level} currency={selectedInstrument?.currency.sign} />
-      <label htmlFor="amount">Amount:</label>
-      <input
-        id="amount"
-        type="number"
-        min={0}
-        value={amount}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          setAmount(+e.target.value)
-        }
-      ></input>
-      <input type="submit" value="Submit" />
-    </form>
+    <div className="TradeForm">
+      <form role="form" onSubmit={handleSubmit}>
+        <label htmlFor="instrument"> Instrument</label>
+        <Select
+          name="instrument"
+          options={instruments}
+          selected={selectedInstrument}
+          onChange={instr => setSelectedInstrument(instr as Instrument)}
+        />
+        <label htmlFor="salesPerson"> Sales Person</label>
+        <Select
+          name="salesPerson"
+          options={salesPersons}
+          selected={selectedSalesPerson}
+          onChange={sp => setSelectedSalesPerson(sp as SalesPerson)}
+        />
+        <LevelComponent onLevelChange={setLevel} level={level} currency={selectedInstrument?.currency.sign} />
+        <label htmlFor="amount">Amount:</label>
+        <input
+          id="amount"
+          type="number"
+          min={0}
+          value={amount}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setAmount(+e.target.value)
+          }
+        ></input>
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
   );
 };
 

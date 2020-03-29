@@ -1,0 +1,9 @@
+.TradeForm  {
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+}
+
+form > * {
+  display: inline-block;
+}
