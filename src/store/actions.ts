@@ -5,5 +5,5 @@ export function createTrade(trade: Trade): ActionTypes {
   return {
     type: CREATE_TRADE,
     payload: trade
-  }
+  };
 }

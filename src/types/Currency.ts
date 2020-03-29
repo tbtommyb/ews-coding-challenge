@@ -1,4 +1,4 @@
 export default interface Currency {
-  code: string
-  sign: string
+  code: string;
+  sign: string;
 }

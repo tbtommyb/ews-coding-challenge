@@ -3,14 +3,14 @@ import { AppState, ActionTypes, CREATE_TRADE } from "./types";
 
 const initialState: AppState = {
   trades: []
-}
+};
 
 function trades(state = initialState, action: ActionTypes): AppState {
-  switch(action.type) {
+  switch (action.type) {
     case CREATE_TRADE:
       return {
         trades: [...state.trades, action.payload]
-      }
+      };
     default:
       return state;
   }

@@ -5,6 +5,6 @@ export enum LevelType {
 }
 
 export default interface Level {
-  value: number
-  type: LevelType
+  value: number;
+  type: LevelType;
 }

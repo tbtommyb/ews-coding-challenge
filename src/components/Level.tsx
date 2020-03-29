@@ -9,7 +9,11 @@ interface LevelComponentProps {
 }
 
 // TODO: should level be optional?
-const LevelComponent: FC<LevelComponentProps> = ({ onLevelChange, level, currency = "$" }) => {
+const LevelComponent: FC<LevelComponentProps> = ({
+  onLevelChange,
+  level,
+  currency = "$"
+}) => {
   const handleTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onLevelChange({ value: 0, type: e.target.value as LevelType });
   };
