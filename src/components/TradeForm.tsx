@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, ChangeEvent } from "react";
 
 import Select from "./Select";
 import LevelComponent from "./Level";
@@ -26,6 +26,8 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
     type: LevelType.Price
   });
 
+  const [amount, setAmount] = useState<number>(0);
+
   return (
     <form role="form">
       <label htmlFor="instrument"> Instrument</label>
@@ -42,7 +44,17 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons }) => {
         selected={selectedSalesPerson}
         onChange={sp => setSelectedSalesPerson(sp as SalesPerson)}
       />
-      <LevelComponent onLevelChange={setLevel} level={level} />
+      <LevelComponent onLevelChange={setLevel} level={level} currency={selectedInstrument?.currency.sign} />
+      <label htmlFor="amount">Amount:</label>
+      <input
+        id="amount"
+        type="number"
+        min={0}
+        value={amount}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setAmount(+e.target.value)
+        }
+      ></input>
     </form>
   );
 };
