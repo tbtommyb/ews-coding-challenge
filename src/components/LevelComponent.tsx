@@ -3,6 +3,7 @@ import React, { FC, ChangeEvent } from "react";
 import {
   FormControl,
   FormControlLabel,
+  FormHelperText,
   RadioGroup,
   Radio,
   TextField,
@@ -18,12 +19,14 @@ interface LevelComponentProps {
   levelTypes: LevelType[];
   onLevelChange: (level: Level) => any;
   isLoading: boolean;
+  errors: { value: string[], type: string[] };
 }
 
 const LevelComponent: FC<LevelComponentProps> = ({
   onLevelChange,
   level,
   isLoading,
+  errors,
   currency = { code: "USD", sign: "$" },
   levelTypes = []
 }) => {
@@ -35,10 +38,12 @@ const LevelComponent: FC<LevelComponentProps> = ({
     onLevelChange({ ...level, value: +e.target.value });
   };
 
+  const valueErrorsPresent = !!errors.value.length;
+  const typeErrorsPresent = !!errors.type.length;
   return (
     <Grid container direction="row" justify="flex-start">
       <Grid item xs={12}>
-        <FormControl>
+      <FormControl>
           <TextField
             id="level"
             label={`Level (${currency.sign})`}
@@ -47,11 +52,13 @@ const LevelComponent: FC<LevelComponentProps> = ({
             onChange={handleLevelChange}
             value={Number(level.value).toString()}
             disabled={isLoading}
+            error={valueErrorsPresent}
+            helperText={errors.value.join(", ")}
           />
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" error={typeErrorsPresent}>
           <RadioGroup
             name="levelType"
             value={level.type}
@@ -62,6 +69,8 @@ const LevelComponent: FC<LevelComponentProps> = ({
                 <FormControlLabel value={lt} key={lt} control={<Radio disabled={isLoading} />} label={lt} />
             ))}
           </RadioGroup>
+          {typeErrorsPresent &&
+           <FormHelperText>{errors.type.join(", ")}</FormHelperText>}
         </FormControl>
       </Grid>
     </Grid>

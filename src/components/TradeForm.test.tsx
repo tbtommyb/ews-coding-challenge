@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, within } from "@testing-library/react";
+import { screen, fireEvent, within } from "@testing-library/react";
 
 import TradeForm from "./TradeForm";
 import { renderWithRedux } from "../utils/testHelpers";
@@ -26,80 +26,84 @@ test("selects the first instrument by default", () => {
 });
 
 describe("validation", () => {
-  test("shows messages for insufficient amount and level", async () => {
-    const { getByText } = renderWithRedux(
+  test("submit is disabled when form is not valid", async () => {
+    const { getByText, getByRole } = renderWithRedux(
         <TradeForm instruments={instruments} salesPersons={sales} />
     );
 
     const submit = getByText("Submit").parentNode;
-    fireEvent.click(submit);
+    expect(submit).toBeDisabled();
+  });
 
-    const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Minimum amount for Share is 100");
-    expect(errors).toHaveTextContent("Amount must be above 0.0");
-    expect(errors).toHaveTextContent("Level must be above 0.0");
+  test("shows messages for insufficient amount and level", async () => {
+    const { getByText, getByRole } = renderWithRedux(
+        <TradeForm instruments={instruments} salesPersons={sales} />
+    );
+
+    const form = getByRole("form")
+    fireEvent.blur(form);
+
+    expect(form).toHaveTextContent("Minimum amount for Share is 100");
+    expect(form).toHaveTextContent("Amount must be above 0.0");
+    expect(form).toHaveTextContent("Level must be above 0.0");
   });
 
   test("does not allow trades below minimum tradeable amount", async () => {
-    const { getByLabelText, getByText } = renderWithRedux(
+    const { getByLabelText, getByRole } = renderWithRedux(
         <TradeForm instruments={instruments} salesPersons={sales} />
     );
+    const form = getByRole("form");
     const amount = getByLabelText("Amount:");
-    const level = getByLabelText("Level ($)");
     fireEvent.change(amount, { target: { value: 10 } });
-    fireEvent.change(level, { target: { value: 1000 } });
+    fireEvent.blur(form);
 
-    const submit = getByText("Submit").parentNode;
-    fireEvent.click(submit);
-
-    const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Minimum amount for Share is 100");
+    expect(form).toHaveTextContent("Minimum amount for Share is 100");
   });
 
   test("does not allow trades without sales person", async () => {
-    const { getByLabelText, getByText } = renderWithRedux(
+    const { getByLabelText, getByRole } = renderWithRedux(
         <TradeForm instruments={instruments} salesPersons={[]} />
     );
+    const form = getByRole("form");
     const amount = getByLabelText("Amount:");
     const level = getByLabelText("Level ($)");
     fireEvent.change(amount, { target: { value: 1000 } });
     fireEvent.change(level, { target: { value: 1000 } });
+    fireEvent.blur(form);
 
-    const submit = getByText("Submit").parentNode;
-    fireEvent.click(submit);
-
-    const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Sales person must be selected");
+    expect(form).toHaveTextContent("Sales person must be selected");
   });
 
   test("does not allow trades without instrument", async () => {
-    const { getByLabelText, getByText } = renderWithRedux(
+    const { getByLabelText, getByRole } = renderWithRedux(
         <TradeForm instruments={[]} salesPersons={sales} />
     );
+    const form = getByRole("form");
     const amount = getByLabelText("Amount:");
     const level = getByLabelText("Level ($)");
     fireEvent.change(amount, { target: { value: 1000 } });
     fireEvent.change(level, { target: { value: 1000 } });
+    fireEvent.blur(form);
 
-    const submit = getByText("Submit").parentNode;
-    fireEvent.click(submit);
-
-    const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Instrument must be selected");
+    expect(form).toHaveTextContent("Instrument must be selected");
   });
 });
 
 describe("creating trades", () => {
   test("dispatches a valid trade", () => {
     const mockDispatch = jest.fn();
-    const { getByLabelText, getByText, store } = renderWithRedux(
+    const { getByLabelText, getByText, getByRole, store } = renderWithRedux(
         <TradeForm instruments={instruments} salesPersons={sales} />
     );
     store.dispatch = mockDispatch
+
+    const form = getByRole("form");
     const amount = getByLabelText("Amount:");
     const level = getByLabelText("Level ($)");
+
     fireEvent.change(amount, { target: { value: 100 } });
     fireEvent.change(level, { target: { value: 1000 } });
+    fireEvent.blur(form);
 
     const submit = getByText("Submit").parentNode;
     fireEvent.click(submit);

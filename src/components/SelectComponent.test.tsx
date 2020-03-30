@@ -20,6 +20,7 @@ const renderSelect = (options = [], cb = () => {}) => {
       selected={selected}
       onChange={cb}
       isLoading={false}
+      errors={[]}
     />
   );
 };

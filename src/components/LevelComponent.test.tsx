@@ -6,10 +6,18 @@ import { LevelType } from "../types/Level";
 
 var level = { value: 0, type: LevelType.Price };
 let levelTypes = Object.values(LevelType);
+let errors = { value: [], type: [] };
 
 const renderLevelCommponent = (cb = () => {}) => {
-  return render(<LevelComponent level={level} levelTypes={levelTypes} onLevelChange={cb} />);
-}
+  return render(
+    <LevelComponent
+      level={level}
+      levelTypes={levelTypes}
+      onLevelChange={cb}
+      errors={errors}
+    />
+  );
+};
 
 test("renders the level types provided as options", () => {
   const { getByLabelText } = renderLevelCommponent();

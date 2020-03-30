@@ -1,5 +1,7 @@
 import React, { FC, useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch } from "react-redux";
+import deepEqual from "deep-equal";
+import cloneDeep from "clone-deep";
 
 import {
   TextField,
@@ -25,30 +27,48 @@ interface TradeFormProps {
   isLoading: boolean;
 }
 
+interface ValidationErrors {
+  instrument: string[],
+  salesPerson: string[],
+  amount: string[],
+  level: {
+    value: string[],
+    type: string[]
+  }
+}
+
+const emptyValidationErrors: ValidationErrors = {
+  instrument: [],
+  salesPerson: [],
+  amount: [],
+  level: { value: [], type: [] }
+};
+
 const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading }) => {
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    emptyValidationErrors
+  );
+  const [errorState, setErrorState] = useState<boolean>(true);
+
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(
     instruments[0]
   );
+
   const [selectedSalesPerson, setSelectedSalesPerson] = useState<SalesPerson>(
     salesPersons[0]
   );
+
   const [level, setLevel] = useState<Level>({
     value: 0,
     type: selectedInstrument?.levelTypes[0]
   });
+
   const [amount, setAmount] = useState<number>(0);
 
   const dispatch = useDispatch();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const [isValid, errors] = validate();
-    setValidationErrors(errors);
-    if (!isValid) {
-      return;
-    }
 
     dispatch(createTradeRequest({
       instrument: selectedInstrument,
@@ -59,32 +79,35 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     }));
   };
 
-  const validate = (): [boolean, string[]] => {
-    let errors = [];
+  const validate = () => {
+    let errors = cloneDeep(emptyValidationErrors);
+
     if (!selectedInstrument) {
-      errors.push("Instrument must be selected");
+      errors.instrument.push("Instrument must be selected");
     } else {
       let si = selectedInstrument;
       if (amount < si.minTradeable) {
-        errors.push(`Minimum amount for ${si.name} is ${si.minTradeable}`);
+        errors.amount.push(`Minimum amount for ${si.name} is ${si.minTradeable}`);
       }
       if (!si.levelTypes.includes(level.type)) {
-        errors.push(`Level type ${level.type} not valid for ${si.name}`);
+        errors.level.type.push(`Level type ${level.type} not valid for ${si.name}`);
       }
     }
     if (!selectedSalesPerson) {
-      errors.push("Sales person must be selected");
+      errors.salesPerson.push("Sales person must be selected");
     }
-    if (level.value === 0) {
-      errors.push("Level must be above 0.0");
+    if (level.value <= 0) {
+      errors.level.value.push("Level must be above 0.0");
     }
     if (!level.type) {
-      errors.push("Level type must be selected");
+      errors.level.type.push("Level type must be selected");
     }
-    if (amount === 0) {
-      errors.push("Amount must be above 0.0");
+    if (amount <= 0) {
+      errors.amount.push("Amount must be above 0.0");
     }
-    return [errors.length === 0, errors];
+
+    setValidationErrors(errors);
+    setErrorState(!deepEqual(errors, emptyValidationErrors));
   }
 
   const handleInstrumentChange = (instrument: Instrument) => {
@@ -94,9 +117,8 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     }
   }
 
-  const errorsPresent = validationErrors.length > 0;
   return (
-    <form role="form" className="TradeForm" onSubmit={handleSubmit}>
+      <form role="form" className="TradeForm" onBlur={validate} onSubmit={handleSubmit}>
       <Grid
         container
         direction="row"
@@ -109,6 +131,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
             label="Instrument"
             options={instruments}
             selected={selectedInstrument}
+            errors={validationErrors.instrument}
             onChange={instr => handleInstrumentChange(instr as Instrument)}
             isLoading={isLoading}
           />
@@ -119,6 +142,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
             label="Sales Person"
             options={salesPersons}
             selected={selectedSalesPerson}
+            errors={validationErrors.salesPerson}
             onChange={sp => setSelectedSalesPerson(sp as SalesPerson)}
             isLoading={isLoading}
           />
@@ -130,6 +154,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
             currency={selectedInstrument?.currency}
             levelTypes={selectedInstrument?.levelTypes}
             isLoading={isLoading}
+            errors={validationErrors.level}
           />
         </Grid>
         <Grid item xs={3}>
@@ -139,6 +164,8 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
               label="Amount: "
               type="number"
               inputProps={{min: 0, step: 0.01}}
+              error={!!validationErrors.amount.length}
+              helperText={validationErrors.amount.join(", ")}
               value={Number(amount).toString()}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setAmount(+e.target.value)
@@ -150,7 +177,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
         <Grid item xs={1}>
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || errorState}
             variant="contained"
             color="primary"
           >Submit</Button>
@@ -158,7 +185,6 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
       </Grid>
       <Grid item xs={12}>
         <div title="notifications" className="notifications">
-          {errorsPresent && <p>{validationErrors.join(". ")}</p>}
           {isLoading && <div className="center"><CircularProgress/></div>}
         </div>
       </Grid>
