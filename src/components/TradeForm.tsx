@@ -62,6 +62,10 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     if (!selectedInstrument) {
       errors.push("Instrument must be selected");
     }
+    if (amount < selectedInstrument?.minTradeable) {
+      let si = selectedInstrument;
+      errors.push(`Minimum amount for ${si.name} is ${si.currency.sign}${si.minTradeable}`);
+    }
     if (!selectedSalesPerson) {
       errors.push("Sales person must be selected");
     }
@@ -140,7 +144,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
       </Grid>
       <Grid item xs={12}>
         <div title="notifications" className="notifications">
-          {errorsPresent && <p>{validationErrors.join(", ")}</p>}
+          {errorsPresent && <p>{validationErrors.join(". ")}</p>}
         </div>
       </Grid>
     </form>

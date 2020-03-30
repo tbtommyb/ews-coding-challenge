@@ -5,7 +5,8 @@
     "currency": {
       "code": "USD",
       "sign": "$"
-    }
+    },
+    "minTradeable": 100
   },
   {
     "id": "2",
@@ -13,7 +14,8 @@
     "currency": {
       "code": "GBP",
       "sign": "£"
-    }
+    },
+    "minTradeable": 1
   },
   {
     "id": "3",
@@ -21,6 +23,7 @@
     "currency": {
       "code": "GBP",
       "sign": "£"
-    }
+    },
+    "minTradeable": 0.1
   }
 ]
