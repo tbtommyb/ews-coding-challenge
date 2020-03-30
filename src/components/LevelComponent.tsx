@@ -3,17 +3,19 @@ import React, { FC, ChangeEvent } from "react";
 import {
   FormControl,
   FormControlLabel,
-  FormGroup,
   RadioGroup,
   Radio,
-  TextField
+  TextField,
+  Grid
 } from "@material-ui/core";
 
 import Level, { LevelType } from "../types/Level";
+import Currency from "../types/Currency";
 
 interface LevelComponentProps {
   level: Level;
-  currency: string;
+  currency: Currency;
+  levelTypes: LevelType[];
   onLevelChange: (level: Level) => any;
   isLoading: boolean;
 }
@@ -22,7 +24,8 @@ const LevelComponent: FC<LevelComponentProps> = ({
   onLevelChange,
   level,
   isLoading,
-  currency = "$"
+  currency = { code: "USD", sign: "$" },
+  levelTypes = []
 }) => {
   const handleTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     onLevelChange({ value: 0, type: e.target.value as LevelType });
@@ -33,31 +36,35 @@ const LevelComponent: FC<LevelComponentProps> = ({
   };
 
   return (
-      <FormGroup row={true}>
-      <FormControl>
-        <TextField
-          id="level"
-          label={`Level (${currency})`}
-          type="number"
-    inputProps={{ min: 0, step: 0.01 }}
-          onChange={handleLevelChange}
-          value={level.value}
-          disabled={isLoading}
-        />
-      </FormControl>
-      <FormControl component="fieldset">
-        <RadioGroup
-          name="levelType"
-          value={level.type}
-    row={true}
-          onChange={handleTypeChange}
-        >
-          {Object.keys(LevelType).map((lt: string) => (
-              <FormControlLabel value={lt} key={lt} control={<Radio disabled={isLoading} />} label={lt} />
-          ))}
-        </RadioGroup>
-      </FormControl>
-    </FormGroup>
+    <Grid container direction="row" justify="flex-start">
+      <Grid item xs={12}>
+        <FormControl>
+          <TextField
+            id="level"
+            label={`Level (${currency.sign})`}
+            type="number"
+            inputProps={{ min: 0, step: 0.01 }}
+            onChange={handleLevelChange}
+            value={Number(level.value).toString()}
+            disabled={isLoading}
+          />
+        </FormControl>
+      </Grid>
+      <Grid item xs={12}>
+        <FormControl component="fieldset">
+          <RadioGroup
+            name="levelType"
+            value={level.type}
+            row={true}
+            onChange={handleTypeChange}
+          >
+            {levelTypes.map((lt: string) => (
+                <FormControlLabel value={lt} key={lt} control={<Radio disabled={isLoading} />} label={lt} />
+            ))}
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -6,7 +6,8 @@
       "code": "USD",
       "sign": "$"
     },
-    "minTradeable": 100
+    "minTradeable": 100,
+    "levelTypes": ["Price", "Yield", "Spread"]
   },
   {
     "id": "2",
@@ -15,7 +16,8 @@
       "code": "GBP",
       "sign": "£"
     },
-    "minTradeable": 1
+    "minTradeable": 1,
+    "levelTypes": ["Yield", "Spread"]
   },
   {
     "id": "3",
@@ -24,6 +26,7 @@
       "code": "GBP",
       "sign": "£"
     },
-    "minTradeable": 0.1
+    "minTradeable": 0.1,
+    "levelTypes": ["Spread"]
   }
 ]

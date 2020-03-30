@@ -5,7 +5,8 @@ import {
   TextField,
   Button,
   FormControl,
-  Grid
+  Grid,
+  CircularProgress
 } from "@material-ui/core";
 
 import SelectComponent from "./SelectComponent";
@@ -13,7 +14,7 @@ import LevelComponent from "./LevelComponent";
 
 import Instrument from "../types/Instrument";
 import SalesPerson from "../types/SalesPerson";
-import Level, { LevelType } from "../types/Level";
+import Level from "../types/Level";
 import { createTradeRequest } from "../store/actions";
 
 import "./TradeForm.css";
@@ -34,7 +35,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
   );
   const [level, setLevel] = useState<Level>({
     value: 0,
-    type: LevelType.Price
+    type: selectedInstrument?.levelTypes[0]
   });
   const [amount, setAmount] = useState<number>(0);
 
@@ -42,6 +43,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const [isValid, errors] = validate();
     setValidationErrors(errors);
     if (!isValid) {
@@ -61,10 +63,14 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     let errors = [];
     if (!selectedInstrument) {
       errors.push("Instrument must be selected");
-    }
-    if (amount < selectedInstrument?.minTradeable) {
+    } else {
       let si = selectedInstrument;
-      errors.push(`Minimum amount for ${si.name} is ${si.currency.sign}${si.minTradeable}`);
+      if (amount < si.minTradeable) {
+        errors.push(`Minimum amount for ${si.name} is ${si.currency.sign}${si.minTradeable}`);
+      }
+      if (!si.levelTypes.includes(level.type)) {
+        errors.push(`Level type ${level.type} not valid for ${si.name}`);
+      }
     }
     if (!selectedSalesPerson) {
       errors.push("Sales person must be selected");
@@ -79,6 +85,13 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
       errors.push("Amount must be above 0.0");
     }
     return [errors.length === 0, errors];
+  }
+
+  const handleInstrumentChange = (instrument: Instrument) => {
+    setSelectedInstrument(instrument);
+    if (!instrument.levelTypes.includes(level.type)) {
+      setLevel({ value: 0, type: instrument.levelTypes[0]});
+    }
   }
 
   const errorsPresent = validationErrors.length > 0;
@@ -96,7 +109,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
             label="Instrument"
             options={instruments}
             selected={selectedInstrument}
-            onChange={instr => setSelectedInstrument(instr as Instrument)}
+            onChange={instr => handleInstrumentChange(instr as Instrument)}
             isLoading={isLoading}
           />
         </Grid>
@@ -114,7 +127,8 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
           <LevelComponent
             onLevelChange={setLevel}
             level={level}
-            currency={selectedInstrument?.currency.sign}
+            currency={selectedInstrument?.currency}
+            levelTypes={selectedInstrument?.levelTypes}
             isLoading={isLoading}
           />
         </Grid>
@@ -125,7 +139,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
               label="Amount: "
               type="number"
               inputProps={{min: 0, step: 0.01}}
-              value={amount}
+              value={Number(amount).toString()}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setAmount(+e.target.value)
               }
@@ -145,6 +159,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
       <Grid item xs={12}>
         <div title="notifications" className="notifications">
           {errorsPresent && <p>{validationErrors.join(". ")}</p>}
+          {isLoading && <div className="center"><CircularProgress/></div>}
         </div>
       </Grid>
     </form>

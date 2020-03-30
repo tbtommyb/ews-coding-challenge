@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
   width: 80%;
   margin: 0 auto;
 }
@@ -7,4 +6,8 @@
 .App-header {
   align-items: center;
   justify-content: center;
+}
+
+.App-header {
+  text-align: center;
 }
