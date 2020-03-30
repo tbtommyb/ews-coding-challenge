@@ -66,7 +66,7 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     } else {
       let si = selectedInstrument;
       if (amount < si.minTradeable) {
-        errors.push(`Minimum amount for ${si.name} is ${si.currency.sign}${si.minTradeable}`);
+        errors.push(`Minimum amount for ${si.name} is ${si.minTradeable}`);
       }
       if (!si.levelTypes.includes(level.type)) {
         errors.push(`Level type ${level.type} not valid for ${si.name}`);

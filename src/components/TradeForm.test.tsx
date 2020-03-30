@@ -35,7 +35,7 @@ describe("validation", () => {
     fireEvent.click(submit);
 
     const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Minimum amount for Share is $100");
+    expect(errors).toHaveTextContent("Minimum amount for Share is 100");
     expect(errors).toHaveTextContent("Amount must be above 0.0");
     expect(errors).toHaveTextContent("Level must be above 0.0");
   });
@@ -53,7 +53,7 @@ describe("validation", () => {
     fireEvent.click(submit);
 
     const errors = await within(document).getByTitle("notifications");
-    expect(errors).toHaveTextContent("Minimum amount for Share is $100");
+    expect(errors).toHaveTextContent("Minimum amount for Share is 100");
   });
 
   test("does not allow trades without sales person", async () => {
