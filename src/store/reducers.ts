@@ -17,7 +17,7 @@ const initialSystemState: SystemState = {
   isLoading: false
 };
 
-function trades(state = initialTradeState, action: ActionTypes): TradeState {
+export function trades(state = initialTradeState, action: ActionTypes): TradeState {
   switch (action.type) {
     case CREATE_TRADE_SUCCESS:
       return {
@@ -35,7 +35,7 @@ function trades(state = initialTradeState, action: ActionTypes): TradeState {
   }
 }
 
-function system(state = initialSystemState, action: ActionTypes): SystemState {
+export function system(state = initialSystemState, action: ActionTypes): SystemState {
   switch (action.type) {
     case SET_IS_LOADING:
       return {
