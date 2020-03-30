@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 
 import TradeForm from "./TradeForm";
 import { renderWithRedux } from "../utils/testHelpers";
@@ -35,4 +35,18 @@ test("changing the amount updates the form correctly", () => {
   fireEvent.change(amount, { target: { value: 100 } });
 
   expect(form).toHaveFormValues({ amount: 100 });
+});
+
+test("shows validation errors", () => {
+  const { getByTitle, getByText } = renderWithRedux(
+    <TradeForm instruments={instruments} salesPersons={sales} />
+  );
+
+  const errors = getByTitle("validationErrors");
+  const submit = getByText("Submit");
+  fireEvent.click(submit);
+
+  expect(errors).toHaveTextContent(
+    "Level must be above 0.0, Amount must be above 0.0"
+  );
 });

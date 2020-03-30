@@ -16,7 +16,9 @@ interface TradeFormProps {
   isLoading: boolean;
 }
 
+// TODO: add validation that numbers are > 0
 const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading }) => {
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(
     instruments[0]
   );
@@ -33,6 +35,12 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const [isValid, errors] = validate();
+    setValidationErrors(errors);
+    if (!isValid) {
+      return;
+    }
+
     dispatch(createTradeRequest({
       instrument: selectedInstrument,
       salesPerson: selectedSalesPerson,
@@ -42,6 +50,18 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
     }));
   };
 
+  const validate = (): [boolean, string[]] => {
+    let errors = [];
+    if (level.value === 0) {
+      errors.push("Level must be above 0.0");
+    }
+    if (amount === 0) {
+      errors.push("Amount must be above 0.0");
+    }
+    return [errors.length === 0, errors];
+  }
+
+  const errorsPresent = validationErrors.length > 0;
   return (
     <div className="TradeForm">
       <form role="form" onSubmit={handleSubmit}>
@@ -80,6 +100,9 @@ const TradeForm: FC<TradeFormProps> = ({ instruments, salesPersons, isLoading })
         ></input>
         <input type="submit" value="Submit" disabled={isLoading} />
       </form>
+      <div title="validationErrors">
+      {errorsPresent && <p>{validationErrors.join(", ")}</p>}
+      </div>
     </div>
   );
 };
