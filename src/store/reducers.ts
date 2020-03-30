@@ -22,7 +22,7 @@ function trades(state = initialTradeState, action: ActionTypes): TradeState {
     case CREATE_TRADE_SUCCESS:
       return {
         ...state,
-        trades: [...state.trades, action.payload],
+        trades: [action.payload, ...state.trades],
         pending: undefined
       };
     case CREATE_TRADE_REQUEST:
