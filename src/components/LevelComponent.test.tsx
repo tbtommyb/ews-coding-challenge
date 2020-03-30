@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 
-import LevelComponent from "./Level";
+import LevelComponent from "./LevelComponent";
 import { LevelType } from "../types/Level";
 
 var level = { value: 0, type: LevelType.Price };
@@ -20,7 +20,7 @@ test("changes to the level value are dispatched", () => {
     <LevelComponent level={level} onLevelChange={mockChange} />
   );
 
-  fireEvent.change(getByLabelText("$"), { target: { value: 1000 } });
+  fireEvent.change(getByLabelText("Level ($)"), { target: { value: 1000 } });
 
   expect(mockChange).toHaveBeenCalledWith({ value: 1000, type: "Price" });
 });

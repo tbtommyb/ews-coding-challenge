@@ -1,9 +1,8 @@
-.TradeForm  {
-  display: flex;
-  width: 80%;
-  margin: 0 auto;
+.notifications {
+  height: 4em;
+  padding: .5em;
 }
 
-form > * {
-  display: inline-block;
+.notifications p {
+  margin: 0;
 }

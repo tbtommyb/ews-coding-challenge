@@ -3,34 +3,43 @@ import React, { FC } from "react";
 import "./TradeList.css";
 import Trade from "../types/Trade";
 
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
+} from "@material-ui/core";
+
 interface TradeListProps {
-  trades: Trade[]
+  trades: Trade[];
 }
 
 const TradeList: FC<TradeListProps> = ({ trades }) => {
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Instrument</th>
-            <th>Sales Person</th>
-            <th>Level</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-        {trades.map((t: Trade) => (
-          <tr key={t.id}>
-            <td>{t.instrument.name}</td>
-            <td>{t.salesPerson.name}</td>
-            <td>{`${t.instrument.currency.sign}${t.level.value} (${t.level.type})`}</td>
-            <td>{`${t.amount}`}</td>
-          </tr>
-        ))}
-        </tbody>
-      </table>
-    </div>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Instrument</TableCell>
+            <TableCell>Sales Person</TableCell>
+            <TableCell>Level</TableCell>
+            <TableCell>Amount</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {trades.map((t: Trade) => (
+            <TableRow key={t.id}>
+              <TableCell>{t.instrument.name}</TableCell>
+              <TableCell>{t.salesPerson.name}</TableCell>
+              <TableCell>{`${t.instrument.currency.sign}${t.level.value} (${t.level.type})`}</TableCell>
+              <TableCell>{`${t.amount}`}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

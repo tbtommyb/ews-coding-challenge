@@ -10,5 +10,11 @@
     "name": "Sarah Sales",
     "desk": "Middle",
     "lineOfBusiness": "Ops"
+  },
+  {
+    "id": "3",
+    "name": "Michael Sales",
+    "desk": "Middle",
+    "lineOfBusiness": "Tech"
   }
 ]
